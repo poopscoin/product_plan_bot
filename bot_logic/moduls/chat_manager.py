@@ -15,7 +15,6 @@ class ChatManager(ChatActions):
 
     @classmethod
     def start(cls, *, context: ContextTypes.DEFAULT_TYPE, bot_update: Update):
-        
         return bot_update.message.reply_text(
             text=(
                 f'*{em(_(key='start', lang='en'))}*\n'
