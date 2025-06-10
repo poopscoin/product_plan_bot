@@ -1,14 +1,15 @@
 from datetime import datetime
-from ..objects.user import User
+# from ..objects.user import User
 
 class Sessia():
     def __init__(self, *, bot):
         self._start = datetime.today()
         self._bot = bot
-        self._users: dict[int, User] = {}
+        # self._users: dict[int, User] = {}
     
     def add_user(self, user_id: int):
-        self._users[user_id] = User(user_id=user_id)
+        # self._users[user_id] = User(user_id=user_id)
+        ...
     
     def get_user(self, user_id: int):
         if self._users[user_id]:

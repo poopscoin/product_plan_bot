@@ -1,8 +1,50 @@
 {
-  "gr": "gram.",
+  "buttons": {
+    "menu": {
+      "new_list": "Write a new list 📝",
+      "my_lists": "Send saved list 📨",
+      "received_list": "Lists sent to me 📫",
+      "change_lang": "Change language 🌐",
+      "notification": "You have a new notification 🔔"
+    },
+    "new_plan": {
+      "send": "Send this list 📤",
+      "new_product": "Add product ➕",
+      "save": "Save this list 💾",
+      "history_placeholder": "Then, here will be your product history.",
+      "continue": "Continue this",
+      "go_new": "Start new",
+      "go_plan": "Go to plan ↩"
+    },
+    "system": {
+      "next": "Next ➡",
+      "back": "Return to menu ↩",
+      "cancel": "One step back ⬅"
+    }
+  },
+  "messages": {
+    "menu": "What do you want to do?",
+    "new_plan": {
+      "continue": "Do you have another unfinished plan, do you want to continue it?",
+      "write_name": "Enter the name of your product.\nNext, you will specify the quantity.\nIt will look like this: <u><b>Name</b></u> Quantity (kg/ml/pcs)",
+      "write_count": "How much?\n{product_name} <u><b>Quantity (kg/ml/pcs)</b></u>",
+      "title_plan": "Your plan, <u><b>{title_plan}</b></u>",
+      "footer_plan": "You have specified <u><b>{count}</b></u> products."
+    },
+    "system": {
+      "accidental_button_press": "Did you accidentally press it?",
+      "history_placeholder_press": "Instead of this button, there will be products that you have added to your list."
+    },
+    "changed_lang": "Language changed to English. ✅"
+  },
+  "placeholders": {
+    "title_plan": "Product plan for "
+  },
+  "gr": "gram",
   "kg": "kg.",
   "l": "l.",
   "ml": "ml.",
-  "start": "Hello, please select the language you are comfortable with.",
+  "pcs": "pcs.",
+  "start": "Hi, I'm a bot that helps you write and save grocery lists and send them to your contacts, use the buttons to create your first list and send it to your contact.",
   "lang": "English"
 }
