@@ -1,13 +1,13 @@
 from datetime import datetime
 from mlangm import translate as _
 
-from .products import ProductBuilder, Product
+from .products import Product
 
 class Plan:
     def __init__(self, id: int, *, product_list: dict[int, Product] = None, title: str = None, lang: str = 'en'):
         self._id = id
         self._title = title or _('placeholders.title_plan', lang) + datetime.today().strftime("%d.%m.%y %H:%M")
-        self._product_list = product_list or {}
+        self._product_list = product_list.copy() if product_list else {}
         self._product_count = len(self._product_list)
 
     @property

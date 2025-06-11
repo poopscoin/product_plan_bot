@@ -25,6 +25,8 @@
   "messages": {
     "menu": "What do you want to do?",
     "new_plan": {
+      "complete_save": "Your list has been saved. ✅",
+      "failed_save": "Your list has already been saved. ✅",
       "continue": "Do you have another unfinished plan, do you want to continue it?",
       "write_name": "Enter the name of your product.\nNext, you will specify the quantity.\nIt will look like this: <u><b>Name</b></u> Quantity (kg/ml/pcs)",
       "write_count": "How much?\n{product_name} <u><b>Quantity (kg/ml/pcs)</b></u>",

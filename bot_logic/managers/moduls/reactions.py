@@ -37,14 +37,22 @@ class ReactionsManager(ChatActions):
                     profile.building_product = None
                 return await cls.write_plan(update, context, profile, profile.last_plan_id is not None)
 
-    @classmethod 
+    @classmethod
     async def r_redact_plan(cls, update: Update, context: ContextTypes.DEFAULT_TYPE, profile: Profile):
         if update.message.text == _('buttons.new_plan.save', profile.language):
-            ...
+            if profile.get_plan(profile.last_plan_id-1) and profile.get_plan(profile.last_plan_id-1).products == profile.get_plan(profile.last_plan_id).products:
+                # If the plan is the same as the previous one, do not save
+                return await update.effective_chat.send_message(_('messages.new_plan.failed_save', profile.language))
+
+            profile.new_plan(product_list=profile.get_plan(profile.last_plan_id).products)
+            return await update.effective_chat.send_message(_('messages.new_plan.complete_save', profile.language))
         elif update.message.text == _('buttons.new_plan.new_product', profile.language):
+
             return await cls.write_plan(update, context, profile, True)
+
         elif update.message.text == _('buttons.new_plan.send', profile.language):
             ...
+
         elif update.message.text == _('buttons.new_plan.go_new', profile.language):
             profile.new_plan_crash()
             return await cls.write_plan(update, context, profile, False)

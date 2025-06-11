@@ -135,7 +135,8 @@ class Profile():
         self._created_plans[index] = Plan(index, product_list=product_list, title=title, lang=self.language)
         return self._created_plans[index]
 
-    def get_plan(self, index: int = 1) -> Plan:
+    def get_plan(self, index: int = 1) -> Plan | None:
+        print(index)
         return self._created_plans.get(index)
 
     def remove_my_plan(self, index: int):
