@@ -8,9 +8,11 @@ configure(default_lang='en', translations_path='bot_logic/language')
 
 app = ApplicationBuilder().token(getenv("TOKEN")).build()
 
+app.bot_data['profile_list'] = {}
+
 app.add_handlers(handlers={
     1: [
-        MessageHandler(filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE, ChatManager.action),
+        MessageHandler((filters.TEXT | filters.StatusUpdate.USERS_SHARED) & ~filters.COMMAND & filters.ChatType.PRIVATE, ChatManager.action),
         CommandHandler("start", ChatManager.start, filters=filters.ChatType.PRIVATE),
         CallbackQueryHandler(ChatManager.inline_callback)
     ]

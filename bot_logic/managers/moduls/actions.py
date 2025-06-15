@@ -1,47 +1,32 @@
-from re import sub, escape
 from telegram.ext import ContextTypes
 from telegram import Update
 from mlangm import translate as _
 
+from bot_logic.utils.message_cosmetic import emoji_number, smart_number
 from .profile import Profile
 from .objects.keyboard import ReplyKeyboard, InLineKeyboard
-from .objects.markups import *
+from .objects.markups import MenuMarkup, WritePlanMarkup, ContactMarkup
 from .objects.plan import Plan
 from .objects.products import ProductBuilder, Product
-
-def em(text: str) -> str: return sub(rf"([{escape(r"[]()>#+-=|{}.!\\")}])", r"\\\1", text)
-
-def emoji_number(number: int) -> str:
-    emoji = {
-        '0': '0️⃣',
-        '1': '1️⃣',
-        '2': '2️⃣',
-        '3': '3️⃣',
-        '4': '4️⃣',
-        '5': '5️⃣',
-        '6': '6️⃣',
-        '7': '7️⃣',
-        '8': '8️⃣',
-        '9': '9️⃣',
-    }
-    return ''.join(emoji[char] for char in str(number))
-def smart_number(number: float | int) -> float | int:
-    return int(number) if isinstance(number, float) and number.is_integer() else number
 
 class ChatActions:
     # Query callbacks
     CHANGE_LANG = 'change_lang'
+    NAVIGATIONS = {
+        '➡': 1,
+        '⬅': -1
+    }
 
     # States
 
     # Static messages/variables
-    @staticmethod
-    def __first_choise_lang():
-        return (
-                f'*{em(_(key='start', lang='en'))}*\n'
-                '\n'
-                f'*{em(_(key='start', lang='ua'))}*'
-            )
+    # @staticmethod
+    # def __first_choise_lang():
+    #     return (
+    #             f'*{em(_(key='start', lang='en'))}*\n'
+    #             '\n'
+    #             f'*{em(_(key='start', lang='ua'))}*'
+    #         )
 
     @classmethod
     async def menu(cls, update: Update, context: ContextTypes.DEFAULT_TYPE, **kwargs):
@@ -153,9 +138,17 @@ class ChatActions:
         )
     REDACT_PLAN = redact_plan.__func__
 
-            
+    @classmethod
+    async def select_contact(cls, update: Update, context: ContextTypes.DEFAULT_TYPE, profile: Profile, *, edit_message: str = None):
+        profile.keyboard_state = cls.SELECT_CONTACT
+        keyboard = ReplyKeyboard(markup=ContactMarkup.select_contact(profile.format_contact, profile.language, page=profile.page))
 
-
+        return await update.effective_chat.send_message(
+            text=edit_message if edit_message else _('messages.contacts.select', profile.language),
+            reply_markup=keyboard(),
+            parse_mode="HTML"
+        )
+    SELECT_CONTACT = select_contact.__func__
 
 
             

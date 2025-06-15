@@ -1,11 +1,13 @@
 from telegram import KeyboardButton, KeyboardButtonRequestUsers, InlineKeyboardButton
+from typing import Callable, Any
 from mlangm import translate as _
 
+from bot_logic.utils.message_cosmetic import emoji_number
 from .products import ProductBuilder
 
 class BaseMarkup:
     _BUTTONS_PER_PAGE = 8
-    _NAV_VARIANTS = [[KeyboardButton("<-")], [KeyboardButton("->")], [KeyboardButton("<-"), KeyboardButton("->")]]
+    _CHECK_NONE = lambda d: all(v is None for v in d.values())
 
     @classmethod
     def _inline_write(cls, *, titles: list) -> list[list[KeyboardButton]]:
@@ -22,14 +24,14 @@ class BaseMarkup:
         return [
         [
             KeyboardButton(text=text[0], **text[1]) if isinstance(text, list) else KeyboardButton(text)
-            for text in row
+            for text in row if text
         ]
         for row in titles
     ]
-    
+
     @classmethod
-    def _add_reque_user(cls, *, text: str):
-        return [[KeyboardButton(text=text, request_users=KeyboardButtonRequestUsers(request_id=1, user_is_bot=False, max_quantity=1))]]
+    def _add_reque_user(cls, text: str):
+        return [[KeyboardButton(text=text, request_users=KeyboardButtonRequestUsers(request_id=1, user_is_bot=False, max_quantity=1, request_name=True))]]
 
     @classmethod
     def _num_construct(cls, *, elements: int, page: int = 0) -> list[list[KeyboardButton]]:
@@ -57,8 +59,49 @@ class BaseMarkup:
         return rows
 
     @classmethod
-    def _dict_construct(cls, *, num_dict: dict[int, str]) -> list[list[KeyboardButton]]:
-        return [[KeyboardButton(f"{number}: {value}")] for number, value in sorted(num_dict.items())]
+    def _dict_construct(cls, num_dict: dict[int, str], *, mask: str = None) -> list[list[KeyboardButton]]:
+        if mask is None:
+            return [[KeyboardButton(f"{index}: {value}")] for index, value in sorted(num_dict.items())]
+        else:
+            return [[KeyboardButton(mask.format(index=index, value=value))] for index, value in sorted(num_dict.items())]
+
+    @classmethod
+    def _num_dict_construct(
+        cls,
+        num_dict: dict[int, str],
+        *,
+        mask: str = None,
+        page: int = 0,
+        per_page: int = 3,
+        index_cosmetic: Callable[[int], Any] = lambda r: r,
+        value_cosmetic: Callable[[str], Any] = lambda r: r
+    ) -> tuple[list[list[KeyboardButton]], dict[str, bool] | None]:
+        total_items = len(num_dict)
+        sorted_items = sorted(num_dict.items())
+        mask = mask or "{index}: {value}"
+
+        # No navigation mode
+        if total_items <= per_page:
+            keyboard = [[KeyboardButton(mask.format(index=index_cosmetic(index), value=value_cosmetic(value)))] for index, value in sorted_items]
+            return keyboard, None
+
+        total_pages = (total_items + per_page - 1) // per_page - 1
+
+        start = page * per_page
+        end = start + per_page
+        print(page)
+        print(total_pages)
+        keyboard = [[KeyboardButton(mask.format(index=index_cosmetic(index), value=value_cosmetic(value)))] for index, value in sorted_items[start:end]]
+        nav = {'left': "⬅" if page > 0 else None, 'right': "➡" if page < total_pages else None}
+
+        return keyboard, nav
+
+    # @classmethod
+    # def _get_nav(cls, nav_flags: dict[str, bool]) -> dict[str, KeyboardButton] | None:
+    #     nav_buttons = {}
+    #     nav_buttons['left'] = KeyboardButton("⬅") if nav_flags['left'] else None
+    #     nav_buttons['right'] = KeyboardButton("➡") if nav_flags['right'] else None
+    #     return nav_buttons or None
 
 class MenuMarkup(BaseMarkup):
 
@@ -131,7 +174,24 @@ class WritePlanMarkup(BaseMarkup):
         ]
         return cls._write(titles=markup+controls)
 
-# class ContactKeyboard(BaseMarkup):
+class ContactMarkup(BaseMarkup):
+
+    @classmethod
+    def select_contact(cls, format_contacts: dict[int, str], lang: str = 'en', *, page: int = 0) -> list[list[KeyboardButton]]:
+        custom_cosmetic: Callable[[int], Any] = lambda x: emoji_number(x + 1)
+        keyboard, nav = cls._num_dict_construct(format_contacts, page=page, index_cosmetic=custom_cosmetic)
+
+        controls = [[_('buttons.system.cancel', lang)]]
+        if nav:
+            controls[0].insert(0, nav['left'])
+            controls[0].append(nav['right'])
+
+        controls = cls._write(titles=controls)
+
+        addcontact = cls._add_reque_user(_('buttons.contacts.add', lang))
+
+        return keyboard + addcontact + controls
+    
 
 #     @classmethod
 #     def contacts(cls, *, contacts: dict[int: str], nav: int = None) -> list[list[KeyboardButton]]:

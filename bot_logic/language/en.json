@@ -9,17 +9,21 @@
     },
     "new_plan": {
       "send": "Send this list 📤",
-      "new_product": "Add product ➕",
+      "new_product": "Add product 🍏",
       "save": "Save this list 💾",
       "history_placeholder": "Then, here will be your product history.",
       "continue": "Continue this",
       "go_new": "Start new",
       "go_plan": "Go to plan ↩"
     },
+    "contacts": {
+      "add": "Add contact 📱",
+      "remove": "Remove contact ❌"
+    },
     "system": {
       "next": "Next ➡",
       "back": "Return to menu ↩",
-      "cancel": "One step back ⬅"
+      "cancel": "Step back ⬅"
     }
   },
   "messages": {
@@ -32,6 +36,18 @@
       "write_count": "How much?\n{product_name} <u><b>Quantity (kg/ml/pcs)</b></u>",
       "title_plan": "Your plan, <u><b>{title_plan}</b></u>",
       "footer_plan": "You have specified <u><b>{count}</b></u> products."
+    },
+    "notifs":{
+      "receive_plan": "You were sent a list of products, would you like to see it?"
+    },
+    "contacts": {
+      "already": "This contact is already in your list, under the name <u><b>{name}</b></u>. ✅",
+      "select": "Select a contact to send the list to. 👇",
+      "wrong": "Use the keyboard buttons to select a contact.",
+      "no_contacts": "You don't have any contacts, add them to send the list.",
+      "success_add": "Contact <u><b>{name}</b></u> added. ✅",
+      "success_remove": "Contact <u><b>{name}</b></u> deleted. ✅",
+      "success_send": "The list <u><b>{list}</b></u> has been sent to <u><b>{name}</b></u>. ✅"
     },
     "system": {
       "accidental_button_press": "Did you accidentally press it?",
